@@ -1,4 +1,5 @@
-![promth eks graf dashbord](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/d62d4a44-3db0-41a5-b071-6d8b6e05bcbf)# DevSecOps pipeline
+# DevSecOps pipeline
+
 
 ![terraforn apply](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/c68d9909-efe0-48c2-9350-58296ebd843b)
 

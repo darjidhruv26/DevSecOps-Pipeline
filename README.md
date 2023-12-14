@@ -1,22 +1,29 @@
-# DevSecOps pipeline
+# DevSecOps pipeline project
+-----------------------------------------------------------------------------------
+## Phase 1: Initial Setup 
+### Step 1: Install Terraform on the local machine
+- Haer some Installation steps for MacOS, Windows, Linux & Chocolatey package manager.
+- [Install Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
 
-
+ ### Step 2: Clone the GitHub Repository.
+ - Clone this Git Repo on the locale machine.
 ```bash
 git clone https://github.com/darjidhruv26/YouTube-DevSecOps.git
 ```
-
+- Open this repository in the code editor.
+- Open the terminal and change the directory to `jenkins_terraform`.
 ```bash
 cd jenkins_terraform
  ```
-
+- The `terraform init` command initializes a working directory for Terraform configuration files.
 ```bash
 terraform init
 ```
-
+- The `Terraform plan` command compares the current state of resources with the desired state and generates a plan of action.
 ```bash
 terraform plan
 ```
-
+- The `Terraform apply` command executes the actions proposed in a Terraform plan. It is used to deploy infrastructure.
 ```bash
 terrafrom apply
 ```

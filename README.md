@@ -71,7 +71,7 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 ```
 
 - Run this command, After that you will see the Administrator password
-- Copy and past pop message and local in a notepad.
+- Copy and paste pop message and local in a notepad.
   
 ![jenkins Unlock](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/00bc29db-db91-4faa-ac23-215126524445)
 
@@ -84,7 +84,7 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 
 ### Install Necessary Plugins in Jenkins:
 - Gotot Manage Jenkins -> Plugins -> Available Plugins ->
-  Install this below plugins
+  Install the below plugins
 1. `Eclipse Temurin Installer`
 2. `SonarQube Scanner`
 3. `Sonar Quality Gates`
@@ -129,7 +129,7 @@ And then click `Install`
 - Server URL: `http://<EC2-Public-IP:9000>`
 - Server authentication token: `SonarQube-Token`
 
-Clik on Apply and Save
+Click on Apply and Save
 
 ### Create a Quality gate
 
@@ -240,20 +240,33 @@ pipeline{
 ## Docker Image Build and Push
 
 ### Create DockerHub access token
-- Goto DockerHub -> My Account -> Security -> Create New access token and save it.
+
+- Goto DockerHub -> My Account -> Security -> Create a New access token and save it.
+  
 ### Add DockerHub Credentials
+
 - Goto Jenkins Dashboard -> Manage Jenkins -> Manage Credentials
 - Click on `System` and then `Global Credentials`.
 - Click on `Add Credentials` -> `Secret text` -> Enter your DockerHub credentials (`Username` & `Password`)
 - And Save it.
 
 ## Create an API key from RapidAPI
+
 ### - [Rapid API](https://rapidapi.com/hub)
+
 - Create an account
+
 ![rapidapi](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/5575da39-ec82-48e8-ab6d-4466dee6e698)
 
+- Now in the search bar search for YouTube and select YouTube v3
+- Copy API and use it in the file.
+  ```bash
+  docker build --build-arg REACT_APP_RAPID_API_KEY=<API-KEY> -t ${imageName} .
+  ```
 ![Api](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/b9efed7d-b702-4a5e-b801-5e85035d6904)
 
+- Now add Docker Build and Push commands in the pipeline script.
+  
 ```
 pipeline{
     agent any
@@ -304,7 +317,7 @@ pipeline{
             steps{
                 script{
                    withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker'){   
-                       sh "docker build --build-arg REACT_APP_RAPID_API_KEY=a578815c0fmsh92bedc0fa0c572dp1b3ea3jsnd22c4b326093 -t youtube ."
+                       sh "docker build --build-arg REACT_APP_RAPID_API_KEY=a578815c0fmsh92bed2dp1b322c4b3260 -t youtube ."
                        sh "docker tag youtube dhruvdarji123/youtube:latest "
                        sh "docker push dhruvdarji123/youtube:latest "
                     }
@@ -321,35 +334,57 @@ pipeline{
 }
 
 ```
+- Click Apply and Save
+- Click Build Now
 
+ ## second pipeline outupt
+ 
 ![jenkins 2 pipeline af docker push](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/df43132f-f73f-48bb-86f3-ee5f0c0c418c)
 
+## DockerHub output
 
-got to the `monitoring-server` directory
+![docker hub](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/03eee3e3-6ed6-4881-a4d4-dd579a9bbc7e)
+
+# Setup Prometheus and Grafana for monitoring
+
+- For installing Prometheus and Grafana go to the `monitoring-server` directory
 
 ```bash
 cd monitoring-server
 ```
-
+- The `terraform init` command initializes a working directory for Terraform configuration files.
 ```bash
 terraform init
 ```
-
+- The `Terraform plan` command compares the current state of resources with the desired state and generates a plan of action.
 ```bash
 terraform plan
 ```
-
+- The `Terraform apply` command executes the actions proposed in a Terraform plan. It is used to deploy infrastructure.
 ```bash
 terraform apply
 ```
 
 ![monitoring server](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/0ddf4ae0-447e-4796-9cae-86d92d9ecc7f)
 
+- Now copy EC2 instance public ip and connect via putty.
+- After connection run `sudo apt update` command.
+
+### Now check Prometheus status
+
+- For that, Run this command
+  
 ```bash
 sudo systemctl status prometheus
 ```
 
 ![promethuse](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/09b5bceb-bf41-47b2-90d4-b8628f5da499)
+
+- Check `<EC2-public-ip:9090>`
+  
+![prometuse 1](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/8e844446-1c97-4714-9f89-3ed75ba7be06)
+
+### Now check Grafana Server status
 
 ```bash
 sudo systemctl status grafana-server
@@ -357,26 +392,41 @@ sudo systemctl status grafana-server
 
 ![grafana server](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/dba92ed9-ba6d-4102-a920-d786832a5a6b)
 
+- Access Grafana web Interface on `<EC2-Public-IP:3000>`
+  
+![Grafana dashbord](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/3c63a4b0-9e45-4db7-aca8-dcd9d7e70fdb)
+
+### Now check Node_exporter status
+
 ```bash
 sudo systemctl status node_exporter
 ```
 
 ![node-expo](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/e5ea7a84-838b-4626-9fbf-a6b3517b6ca9)
 
-![prometuse 1](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/8e844446-1c97-4714-9f89-3ed75ba7be06)
 
 ![prometuse target](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/06fc4791-665d-4cf4-8114-ae562449eb79)
 
+- Now go to the terminal and run this command
+  
 ```bash
 cd /etc/prometheus/
 ```
-
-```ls```
-
+- list of all files
+  
+```bash
+ls
+```
+### Configure Prometheus Plugin Integration:
+- Prometheus Configuration:
+  To configure Prometheus to scrape metrics from Node Exporte, You need to modify the `prometheus.yml` file.
+- run this command to open `prometheus.yml` in `nano` editor.
+  
 ```bash
 sudo nano prometheus.yml
 ```
-
+- modify like this.
+  
 ```bash
   - job_name: 'node_exporter'
     static_configs:
@@ -384,28 +434,65 @@ sudo nano prometheus.yml
 ```
 ![nodemode config](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/1198185d-addb-449a-ad25-8f609c017034)
 
+- Check the validity of the configuration file:
+  
 ```bash
 promtool check config /etc/prometheus/prometheus.yml
 ```
 
 ![prom indentetion](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/2699cd2c-949c-4f15-b9cd-d070e2f86f5e)
 
+- Reload the Prometheus configuration without restarting
+  
 ```bash
 curl -X POST http://localhost:9090/-/reload
 ```
-
+- Now you can access Prometheus targets at:
+  
 ![node-exporter dash](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/28801d50-a4ee-4958-acbe-be36a25277f7)
 
+### Add Prometheus Data Source
 
-![Grafana dashbord](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/3c63a4b0-9e45-4db7-aca8-dcd9d7e70fdb)
+To visualize metrics, You need to add a data source.
+- Click on the gear icon (⚙️) in the left sidebar to open the "Configuration" menu.
+- Select "Data Sources."
+- Click on the "Add data source" button.
+- Choose "Prometheus" as the data source type.
+- In the "HTTP" section:
+    - Set the "URL" to (`http://<Ec2-public-ip:9090`) (assuming Prometheus is running on the same server).
+    - Click the `Save & Test` button to ensure the data source is working.
 
 ![graf con pro](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/3a46b613-ff50-4076-9678-f756536e9bac)
 
+### Import a Dashboard
+To make it easier to view metrics, you can import a pre-configured dashboard. Follow these steps:
+- Click on the "+" (plus) icon in the left sidebar to open the "Create" menu.
+- Select "Dashboard."
+- Click on the "Import" dashboard option.
+- Enter the dashboard code you want to import (e.g., code `1860`).
+- Click the "Load" button.
+- Select the data source you added (Prometheus) from the dropdown.
+- Click on the "Import" button.
+
+You should now have a Grafana dashboard set up to visualize metrics from Prometheus.
+
+Grafana is a powerful tool for creating visualizations and dashboards, and you can further customize it to suit your specific monitoring needs.
+
+That's it! You've successfully installed and set up Grafana to work with Prometheus for monitoring and visualization.
+
 ![Grafana dashbord af node](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/4bf1f002-6dbd-4100-88a0-a38b8ffb3ee6)
 
+### Configure Prometheus Plugin Integration for Jenkins
+Integrate Jenkins with Prometheus to monitor the CI/CD pipeline.
+
+### Prometheus Configuration:
+ To configure Prometheus to scrape metrics from Jenkins, You need to modify the `prometheus.yml` file.
+- run this command to open `prometheus.yml` in `nano` editor.
+  
 ```bash
 cd /etc/prometheus/ & $ sudo nano prometheus.yml
 ```
+
 ```bash
 - job_name: 'jenkins'
     metrics_path: '/prometheus'
@@ -414,8 +501,27 @@ cd /etc/prometheus/ & $ sudo nano prometheus.yml
 ```
 ![promet jenkins](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/db40d086-1f63-4f95-8332-5ab3b47c01e0)
 
+Make sure to replace <your-jenkins-ip> and <your-jenkins-port> with the appropriate values for your Jenkins setup.
+
+Check the validity of the configuration file:
+```bash
+promtool check config /etc/prometheus/prometheus.yml
+```
+Reload the Prometheus configuration without restarting:
+```bash
+curl -X POST http://localhost:9090/-/reload
+```
+
 ![prom jen 1](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/e4639c48-6c11-4325-912f-bce8f9abf3d7)
 
+## Add Jenkins Data Source in Grafana
+To visualize metrics, you need to add a data source. Follow these steps:
+- Click on the gear icon (⚙️) in the left sidebar to open the "Configuration" menu.
+- Select "Data Sources."
+- Click on the "Add data source" button.
+- Choose "Prometheus" as the data source type.
+- In the "HTTP" section:
+  - 
 ![Grafana jenkins dashbord](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/66f6ed48-85a2-4d23-a045-6a2114272eb4)
 
 ```bash

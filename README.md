@@ -83,7 +83,7 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 ![4](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/c83c71f5-13b0-44ca-9b05-5c1dc6e5b9dd)
 
 ### Install Necessary Plugins in Jenkins:
-- Gotot Manage Jenkins -> Plugins -> Available Plugins ->
+- Goto Manage Jenkins -> Plugins -> Available Plugins ->
   Install the below plugins
 1. `Eclipse Temurin Installer`
 2. `SonarQube Scanner`
@@ -466,13 +466,13 @@ To visualize metrics, You need to add a data source.
 
 ### Import a Dashboard
 To make it easier to view metrics, you can import a pre-configured dashboard. Follow these steps:
-- Click on the "+" (plus) icon in the left sidebar to open the "Create" menu.
-- Select "Dashboard."
-- Click on the "Import" dashboard option.
+- Click on the `+` (plus) icon in the left sidebar to open the `Create` menu.
+- Select `Dashboard`.
+- Click on the `Import` dashboard option.
 - Enter the dashboard code you want to import (e.g., code `1860`).
-- Click the "Load" button.
+- Click the `Load` button.
 - Select the data source you added (Prometheus) from the dropdown.
-- Click on the "Import" button.
+- Click on the `Import` button.
 
 You should now have a Grafana dashboard set up to visualize metrics from Prometheus.
 
@@ -483,9 +483,19 @@ That's it! You've successfully installed and set up Grafana to work with Prometh
 ![Grafana dashbord af node](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/4bf1f002-6dbd-4100-88a0-a38b8ffb3ee6)
 
 ### Configure Prometheus Plugin Integration for Jenkins
-Integrate Jenkins with Prometheus to monitor the CI/CD pipeline.
 
+Integrate Jenkins with Prometheus to monitor the CI/CD pipeline.
+- Goto Manage Jenkins -> Plugins -> Available Plugins -> `Prometheus metrics` -> Install
+- Restart Jenkins
+- After that, go to Manage Jenkins -> System -> Prometheus
+- Configuration `Path`: prometheus
+- Default Namespace: `default`
+- Collecting metrics period in seconds `120`
+- Job attribute name: `jenkins_job`
+- Click on apply and save
+   
 ### Prometheus Configuration:
+
  To configure Prometheus to scrape metrics from Jenkins, You need to modify the `prometheus.yml` file.
 - run this command to open `prometheus.yml` in `nano` editor.
   
@@ -514,16 +524,52 @@ curl -X POST http://localhost:9090/-/reload
 
 ![prom jen 1](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/e4639c48-6c11-4325-912f-bce8f9abf3d7)
 
-## Add Jenkins Data Source in Grafana
-To visualize metrics, you need to add a data source. Follow these steps:
-- Click on the gear icon (⚙️) in the left sidebar to open the "Configuration" menu.
-- Select "Data Sources."
-- Click on the "Add data source" button.
-- Choose "Prometheus" as the data source type.
-- In the "HTTP" section:
-  - 
+### Import a Dashboard
+To make it easier to view metrics, you can import a pre-configured dashboard. Follow these steps:
+- Click on the `+` (plus) icon in the left sidebar to open the `Create` menu.
+- Select `Dashboard`.
+- Click on the `Import` dashboard option.
+- Enter the dashboard code you want to import (e.g., code `9964`).
+- Click the `Load` button.
+- Select the data source you added (Prometheus) from the dropdown.
+- Click on the `Import` button.
+
 ![Grafana jenkins dashbord](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/66f6ed48-85a2-4d23-a045-6a2114272eb4)
 
+## Setup Email Notification through Jenkins
+
+- Install `Email Extension Plugin` in Jenkins
+- Go to your Gmail and Click on Profile
+- Then click on Manage Your Google Account -> click on the security tab on the left side panel you will get this page(provide mail password).
+- 2-step verification should be enabled.
+- Search for the app in the search bar you will get app passwords like the below image
+  
+![Email](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/e9d1729b-40d5-44f0-9c97-f64b4add8816)
+
+- Click on Generate and copy the password.
+
+- Once the plugin is installed in Jenkins,
+- click on manage Jenkins --> configure system there under the E-mail Notification section configure the details.
+- E-mail Notification
+- SMTP server: `smtp.gmail.com`
+- Check `Use SMTP Authentication` and give your `Email and password`.
+- Check `Use SSL`
+- SMTP port: `465`
+- Then, Click on Apply and Save
+
+- After that, Click on Manage Jenkins -> credentials and add your `mail username` and generated `password` -> ID: `mail` -> Description: `mail`.
+Now under the `Extended E-mail Notification` section configure the details.
+- SMTP server: `smtp.gmail.com`
+- SMTP Port: `465`
+- Advanced ^
+  - Credentials
+  - Use SSL
+- Default Content-Type: `HTML`
+- Triggers: `Always` & `Failure-Any` & `Success`
+- Now click Apply and Save
+
+- Go to pipeline and add this script
+  
 ```bash
 post {
      always {
@@ -537,53 +583,42 @@ post {
         }
     }
 ```
-
+### Output
 ![jenkins Email send](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/5b954bb2-ae31-420d-9ae5-ca5be95d42a8)
 
+
+# Create AWS EKS Cluster
+
+- Update packages in Ubuntu instance
+  
 ```bash
 sudo apt update
 ```
-
-```bash
-sudo apt install curl
-```
-
-```bash
-curl -LO https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl
-```
-
-```bash
-sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-```
-
+- Check `kubectl` version
 ```bash
 kubectl version --client
 ```
-
-## Installing eksctl
-
-```bash
-curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-```
-
-```bash
-cd /tmp
-```
-
-```bash
-sudo mv /tmp/eksctl /bin
-```
-
+- Check `eksctl` version
 ```bash
 eksctl version
 ```
 
 ![eks install](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/914f651b-b938-4712-baf9-b5162545f493)
 
+### Creating Role for EC2 instance
+
+- After that, Go to AWS IAM (Identity and Access Management)
+- Roles -> Create role -> `AWS service` -> select `EC2` -> Next
+- Select `AdministratorAccess` -> Next
+- Role Name `eksctlEC2Role` -> Create Role.
+  
+### Update IAM role
+Now go to eksctl's installed EC2 -> `Actions` -> `Security` -> `Modify IAM role` -> select `eksctlEC2Role` -> Update IAM role
+
 ```bash
 cd ..
 ```
-
+### Create EKS cluster using eksctl command
 ```bash
 eksctl create cluster --name youtube-cluster \
 --region ap-south-1 \
@@ -591,90 +626,131 @@ eksctl create cluster --name youtube-cluster \
 --nodes 3 \
 ```
 
+![eks cluster command](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/b8e0f227-b46a-4339-863c-08f64b022d50)
+
+### Cluster created in AWS 
 ![Eks Cluster dashbord](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/17d90c8c-d7c1-46ab-95e8-0a7032bd768e)
 
-![eks cluster command](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/b8e0f227-b46a-4339-863c-08f64b022d50)
+- Run this command for check running nodes
 
 ```bash
 kubectl get nodes
 ```
+
 ![eks nodes](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/88be794b-69b7-45b8-be5b-ffeafbe7d513)
 
-```bash
-curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-```
+## Integrate Prometheus with EKS
 
-```bash
-chmod 700 get_helm.sh
-```
-
-```bash
-./get_helm.sh
-```
-
+- Check the `helm version` by using this command
+  
 ```bash
 helm version
 ```
 
 ![helm install](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/2e96012a-c3dd-4fe4-93c9-10058938e5bf)
 
+### Installing Prometheus on the EKS cluster using helm
+
+- Add Helm stable chart for a local client by using this command
+  
 ```bash
 helm repo add stable https://charts.helm.sh/stable
 ```
 
 ![helm stable](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/70ac23d8-bf9f-4e45-8920-9f0ab4b6eceb)
 
+- Install Prometheus using helm chart by using this command
+  
 ```bash
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 ```
 
 ![helm promet](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/a61171a5-6a0c-4aa7-bc62-c3cd3f5038ce)
 
+- Create a separate namespace for Prometheus using this command
+  
 ```bash
 kubectl create namespace prometheus
 ```
 
 ![helm namespace](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/67321f1b-a51f-496d-8793-d5a42d8de000)
 
+- Inatsll prometheus by using this command
+  
 ```bash
 helm install stable prometheus-community/kube-prometheus-stack -n prometheus
 ```
 
 ![helm pro stack](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/520487bc-2e2e-494b-bce0-e323c797bd08)
 
+- Check Peds for prometheus
+  
 ```bash
 kubectl get pods -n prometheus
 ```
 
 ![helm pro nodes](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/d270d880-4611-459d-8920-917c6fda8bf1)
 
+- Check services for prometheus
+  
 ```bash
 kubectl get svc -n prometheus
 ```
 
 ![helm service](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/2b80bade-90d6-4dc5-b546-2e783365f673)
 
+- This pods are not connected with the external world.
+- So that, edit prometheus service file.
+  
 ```bash
 kubectl edit svc stable-kube-prometheus-sta-prometheus -n prometheus 
 ```
 ![helm pro file edite](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/9b006747-a4ee-4515-85fe-c36a5ba6cb4d)
 
-![pro load added](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/b1546fba-14c1-462b-93a0-1144d4835c78)
-
-![eks prometh run](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/97d72702-1587-4997-9ea9-f5a0e4743db6)
+- Edit the Prometheus service file
+- In type `Cluster IP` -> `LoadBalancer`
+- And Port expose to `9090`
 
 ```bash
 kubectl get svc -n prometheus
 ```
+![pro load added](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/b1546fba-14c1-462b-93a0-1144d4835c78)
+
+- Copy Load Balancer URL and type in Browser.
+  
+![eks prometh run](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/97d72702-1587-4997-9ea9-f5a0e4743db6)
+
+- Goto Prometheus dashboard -> Status -> Targets
+
 ![eks prometh servise](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/663ec21f-5171-445d-983f-f2dd6826cde7)
 
+### Import Grafana Monitoring dashboard for Kubernetes
+
+- Goto Grafana Dashboard
+- Grafana Dashboard -> Connections -> Data sources
+- `+ Add new data source` -> Name `Prometheus-EKS` -> URL `http://<LoadBalancer:9090`-> Save
+  
 ![prom-EKS grafana](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/03cff7db-8ee3-4a3d-b183-e71676960a47)
 
+### Import Dashboard
+
+- Create a Dashboard for Kubernetes pods
+- Goto Grafana -> Dashboards -> Add ID `15760` Click `Load` -> Data Source `Prometheus-EKS` -> Click Import
+  
 ![promth eks graf dashbord](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/09f7459b-38c4-4435-9aff-6586e3ba7be7)
 
+### Import Dashboard
+
+- Create a Dashboard for the Kubernetes EKS Cluster
+- Goto Grafana -> Dashboards -> Add ID `17119` Click `Load` -> Data Source `Prometheus-EKS` -> Click Import
+  
 ![k8s promth dash](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/33bedae6-a6a3-4d1d-bf25-5d27e610af1a)
 
+- View all Grafana Dashboards
+  
 ![Grafana dashbords](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/6eb4af7b-0356-4ac7-a1c7-1ed3ebcaaa1e)
+
+## Configure the Jenkins Pipeline for Deploy Application on AWS EKS
 
 
 ![k8s install on Jenkins](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/95e55c27-8183-4e0c-aaa5-23cb428575a3)

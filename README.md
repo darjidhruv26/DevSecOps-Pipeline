@@ -237,6 +237,14 @@ pipeline{
 
 ![sonar dashbord af pip](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/70757b9b-1af0-4405-b6e5-d8e8cdc11dc4)
 
+### Set the Trigger
+
+Got to Jenkins
+- Pipeline -> Configuration
+- Click on `GitHub Project` -> Select `GitHub project URL`
+- And Build Triggers -> select `GitHub hook trigger for GITScm polling`
+- Now go to the Repository settings -> Webhooks -> Add webhook -> add Payload URL `http://<jenkins-ec2-public-ip:8080>/github-webhook/` -> `Add webhook`.
+  
 ## Docker Image Build and Push
 
 ### Create DockerHub access token
@@ -419,7 +427,7 @@ ls
 ```
 ### Configure Prometheus Plugin Integration:
 - Prometheus Configuration:
-  To configure Prometheus to scrape metrics from Node Exporte, You need to modify the `prometheus.yml` file.
+To configure Prometheus to scrape metrics from Node Exporte, You need to modify the `prometheus.yml` file.
 - run this command to open `prometheus.yml` in `nano` editor.
   
 ```bash
@@ -752,15 +760,34 @@ kubectl get svc -n prometheus
 
 ## Configure the Jenkins Pipeline for Deploy Application on AWS EKS
 
+### Install Kubernetes plugin 
+
+- Go to Jenkins Dashboard -> Manage Jenkins -> Plugins
+- `Kubernetes`
+- `Kubernetes Client API`
+- `Kubernetes Credentials`
+- `kubernetes CLI`
+- Click on Install
 
 ![k8s install on Jenkins](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/95e55c27-8183-4e0c-aaa5-23cb428575a3)
 
-
+- Go to Terminal and run `ls -a`
+   
 ![ls -a](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/e144017b-2da9-4363-b351-8c7555a7e209)
 
-
+- Go to `.kube` directory and after run `cat config`
+  
 ![cat config](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/8b59c3ef-03c7-45bb-95f5-c42e8c6b381e)
 
+- Copy and Paste all content save in local `secret.txt` file  
+
+- Now add this `secret.txt` file in jenkins
+- Go to Manage Jenkins -> credentials -> System -> Global credentials
+- New credentials
+- kind `Secret file`
+- upload a `secret.txt` file
+- ID `Kubernetes`
+Add Kubernetes steps in the pipeline.
 
 ```
 pipeline{
@@ -854,14 +881,74 @@ pipeline{
 
 ```
 
+- Add this pipeline script
+- Apply and Save
+- Click on `Build Now`
+   
 ![finel jenkins pipeline](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/4fc8e760-a126-43df-be2c-f9f0b094780f)
 
+### Grafana dashboard for  
 ![grafana finel](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/7c9f85e1-060c-44ed-bd6d-0ff328c004ae)
+
+### final Grafane dashboard for Kubernetes Pods
 
 ![grafana fi](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/bbeef79b-f85e-4f6b-a302-654dfa006b89)
 
+- Run this command
+```bash
+kubectl get svc
+```
+- Now copy `LoadBalancer` URL and paste in Web browser
+
 ![get svc finel](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/36d1d302-f314-4ebc-b3e2-8a0bf51a2eb9)
+
+### Now enjoy your video streaming application
 
 ![finel output](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/05b8424f-881a-4ec3-996e-342a70bb55b0)
 
+----------------------------------------------------------------------------------------------------
 ![finel output 1](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/7d8e2792-268e-4f7b-aa9d-f062a892b955)
+
+# Clean-Up Environment
+
+- This command will delete all the pods in Prometheus namespace
+```bash
+kubectl delete --all pods -n prometheus
+```
+- 
+```bash
+kubectl delete namespace prometheus
+````
+` This command will show the all the deployments, pods & services in default namespace 
+```bash
+kubectl get all
+```
+- Delete deployment in your Kubernetes cluster
+```bash
+kubectl delete deployment.apps/youtube-cluster
+```
+- Delete service for your deployment of Kubernetes cluster
+```bash
+kubectl delete service/youtube-service
+```
+- This command will delete your EKS cluster
+```bash
+eksctl delete cluster youtube-cluster --region ap-south-1
+```
+  OR
+```bash
+eksctl delete cluster --region=ap-south-1 --name=youtube-cluster  
+```
+----------------------------------------------------------------------------------------------------
+### Second way 
+Go to `AWS CloudFormation`
+- Select `Stacks` and Delete that
+
+## Destroy terraform infrastructure as
+
+```bash
+terraform destroy  
+```
+```bash
+terraform destroy -auto-approve
+```

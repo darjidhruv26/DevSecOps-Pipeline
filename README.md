@@ -28,29 +28,155 @@ terraform plan
 terrafrom apply
 ```
 
-
 ![terraforn apply](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/c68d9909-efe0-48c2-9350-58296ebd843b)
 
+- There is one file `install_jenkins.sh` puts all commands for installing `jdk`,`Jenkins`, `Docker`, `SonarQube`, `trivy`, `aws cli`,`kubectl` and `eksctl`in this directory.
+- So that, when Terraform provisions all resources at that time all the tools will install automatically on EC2.
+   
 ![aws ec2](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/f76bda08-fa79-4f42-bf42-49ed854e26de)
 
+- Go to EC2 Instance details and connect with ssh or putty.
+- run this all commands --
+
+```bash
+jenkins --version
+docker --version
+trivy --version
+aws --version
+kubectl --version
+eksctl --version
+```
+
+- Also `SonarQube` is running in a Docker container.
+- To check this run `docker ps` and see sonarqube docker container is running.
+- After that, access SonarQube in a web browser using public IP of your EC2 instance.
+
+  `<EC2-Public-IP:9000>`
+- After, Popup one massage for `Username` and `Password`.
+- Username: `admin`
+- password: `admin`
+
+### SonarQube Dashboard
 ![3](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/e5fe5174-eb13-4d71-bc4c-bc19dbcad04d)
 
+- Acces Jenkins in a web browser using EC2 public IP.
+ 
+  `<EC2-Public-IP:8080>`
+  
+- Unlock Jenkins
+- Run this below command.
+  
+```bash
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+```
+
+- Run this command, After that you will see the Administrator password
+- Copy and past pop message and local in a notepad.
+  
+![jenkins Unlock](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/00bc29db-db91-4faa-ac23-215126524445)
+
+- Now, Install the suggested plugins.
+- Jenkins will now get installed and install all the libraries.
+- After, Create an admin user (Optional step)
+  
+### Jenkins Dashboard
 ![4](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/c83c71f5-13b0-44ca-9b05-5c1dc6e5b9dd)
+
+### Install Necessary Plugins in Jenkins:
+- Gotot Manage Jenkins -> Plugins -> Available Plugins ->
+  Install this below plugins
+1. `Eclipse Temurin Installer`
+2. `SonarQube Scanner`
+3. `Sonar Quality Gates`
+4. `Quality Gates`
+5. `NodeJS`
+6. `Docker`
+7. `Docker Commons`
+8. `Docker Pipeline`
+9. `Docker API`
+10. `docker-build-step`
+And then click `Install`
 
 ![5](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/8848203b-1234-4023-ae8d-2613421246b5)
 
+### Configure Java JDK, NodeJs, SonarQube Scanner and Docker in Jenkins Global tool Configuretion.
+
+- Goto Manage Jenkins -> Tools -> Install JDK(17), NodeJs(16), SonarQube Scanner and Docker.
+  
+![install JDK17](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/69e7f97d-e3e0-444b-a0ae-ab105b6afe3d)
+
+![install Nodejs16](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/fc5df70f-3cc6-4ee4-8fc0-b5eecc1881b4)
+-> Click on Apply and Save
+
+### Configure Sonar Server in Manage Jenkins
+
+- Goto SonarQube Dashboard home page
+- Click on Administration -> Security -> Users -> Click on Tokens and Update Token -> Give it a name -> Generate Token.
+  
 ![sonar 1](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/782b76f4-864c-4404-b218-bcc186f968ee)
 
+- Click on Generate Token
+- Copy Token
+  
 ![sonar token](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/90a0adc3-95a4-409f-8b34-7c9f7ab720d8)
 
+- Goto Jenkins Dashboard -> Manage Jenkins -> Credentials -> Add Secret Text
+  
 ![cred sonar jen](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/21590c55-03bc-471c-ab75-2518f59b8513)
 
+- Now, go to Dashboard -> Manage Jenkins -> System and Add SoanarQube server credentials
+- Name: `SonarQube-Server`,
+- Server URL: `http://<EC2-Public-IP:9000>`
+- Server authentication token: `SonarQube-Token`
+
+Clik on Apply and Save
+
+### Create a Quality gate
+
+- Goto SonarQube dashboard and Click on Quality Gates
+- Click on Create -> name `SonarQube-Quality-Gate` -> Save
+  
 ![sonar quality gate](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/0e9a7e01-08bb-471c-8d7d-b1c2a06ac334)
 
+### Now create a webhook between SonarQube and Jenkins
+
+- Goto SonarQube dashboard -> Administration -> Configuration -> Webhooks -> Click on `create`
+- Name: `jenkins`
+- URL: `http://<ec2-public-ip:8080>/sonarqube-webhook/`
+- And click on `Create`
+                         
 ![sonar webhook](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/29edb5b3-a3e9-4680-ba01-8be77d068999)
 
+### Create a project on SonarQube server
+
+- Goto SonarQube dashboard -> click on `Manually`
+- Create a project
+- Project display name: `Youtube-CICD`
+- Project key name: `Youtube-CICD`
+- Main branch name: `main`
+- Click on Set-up
+  
 ![sonar project](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/38e192ed-505a-4787-891b-13e53bc9b7bf)
 
+- Now you can see Analyze your project page
+  
+![Sonar project token](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/60b83ec4-df8b-4eea-80aa-f27c8b48846e)
+
+- Click on `Generate` -> Continue -> Other (for JS, TS, Go, Python, PHP,...) -> OS `Linux`
+-> Copy commands for the script.
+
+## Create a Jenkins pipeline
+
+- Goto Jenkins dashboard -> click on +New Item
+- Job Name: `Youtube-CICD`
+- Click on Pipeline -> OK
+
+### Configuration
+
+- Click on Discard old builds -> Max# build to keep `2`
+- Now apply & save this script
+- Click on Build Now
+  
 ```bash
 pipeline{
     agent any
@@ -103,10 +229,30 @@ pipeline{
 
 ```
 
+### 1st pipeline output
+
 ![jenkins 1 pipeline](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/b9b54709-7d75-46f6-a232-418a88e79eab)
+
+### SonarQube scan output
 
 ![sonar dashbord af pip](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/70757b9b-1af0-4405-b6e5-d8e8cdc11dc4)
 
+## Docker Image Build and Push
+
+### Create DockerHub access token
+- Goto DockerHub -> My Account -> Security -> Create New access token and save it.
+### Add DockerHub Credentials
+- Goto Jenkins Dashboard -> Manage Jenkins -> Manage Credentials
+- Click on `System` and then `Global Credentials`.
+- Click on `Add Credentials` -> `Secret text` -> Enter your DockerHub credentials (`Username` & `Password`)
+- And Save it.
+
+## Create an API key from RapidAPI
+### - [Rapid API](https://rapidapi.com/hub)
+- Create an account
+![rapidapi](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/5575da39-ec82-48e8-ab6d-4466dee6e698)
+
+![Api](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/b9efed7d-b702-4a5e-b801-5e85035d6904)
 
 ```
 pipeline{

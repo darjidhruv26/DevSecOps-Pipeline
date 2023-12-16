@@ -758,6 +758,10 @@ kubectl get svc -n prometheus
   
 ![Grafana dashbords](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/6eb4af7b-0356-4ac7-a1c7-1ed3ebcaaa1e)
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+## AWS architecture diagram: EKS Cluster
+![EKS cluster system dir drawio](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/e78b0a9d-a8aa-41f9-ad84-9d69d39c26b7)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ## Configure the Jenkins Pipeline for Deploy Application on AWS EKS
 
 ### Install Kubernetes plugin 

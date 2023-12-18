@@ -5,7 +5,7 @@
 
 ## Phase 1: Initial Setup 
 ### Step 1: Install Terraform on the local machine
-- Haer some Installation steps for MacOS, Windows, Linux & Chocolatey package manager.
+- Here are some Installation steps for MacOS, Windows, Linux & Chocolatey package manager.
 
 - [Install Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
 

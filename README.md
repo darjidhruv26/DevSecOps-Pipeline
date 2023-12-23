@@ -783,13 +783,13 @@ kubectl get svc -n prometheus
    
 ![ls -a](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/e144017b-2da9-4363-b351-8c7555a7e209)
 
-- Go to `.kube` directory and after run `cat config`
+- Go to `.kube` directory and after running `cat config`
   
 ![cat config](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/8b59c3ef-03c7-45bb-95f5-c42e8c6b381e)
 
-- Copy and Paste all content save in local `secret.txt` file  
+- Copy and Paste all content save in the local `secret.txt` file  
 
-- Now add this `secret.txt` file in jenkins
+- Now add this `secret.txt` file in Jenkins
 - Go to Manage Jenkins -> credentials -> System -> Global credentials
 - New credentials
 - kind `Secret file`
@@ -923,11 +923,11 @@ kubectl get svc
 ```bash
 kubectl delete --all pods -n prometheus
 ```
-- 
+- This Command will delete Prometheus`namespace` .
 ```bash
 kubectl delete namespace prometheus
 ````
-` This command will show all the deployments, pods & services in the default namespace 
+- This command will show all the deployments, pods & services in the default namespace 
 ```bash
 kubectl get all
 ```

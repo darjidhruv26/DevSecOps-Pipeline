@@ -47,8 +47,8 @@ jenkins --version
 docker --version
 trivy --version
 aws --version
-kubectl --version
-eksctl --version
+kubectl version --client
+eksctl version
 ```
 
 - Also `SonarQube` is running in a Docker container.

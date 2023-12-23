@@ -39,8 +39,8 @@ terrafrom apply
    
 ![aws ec2](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/f76bda08-fa79-4f42-bf42-49ed854e26de)
 
-- Go to EC2 Instance details and connect with ssh or putty.
-- run this all commands --
+- Go to EC2 Instance details and connect with ssh or Putty.
+- run all commands --
 
 ```bash
 jenkins --version
@@ -63,7 +63,7 @@ eksctl --version
 ### SonarQube Dashboard
 ![3](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/e5fe5174-eb13-4d71-bc4c-bc19dbcad04d)
 
-- Acces Jenkins in a web browser using EC2 public IP.
+- Access Jenkins in a web browser using EC2 public IP.
  
   `<EC2-Public-IP:8080>`
   
@@ -151,7 +151,7 @@ Click on Apply and Save
                          
 ![sonar webhook](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/29edb5b3-a3e9-4680-ba01-8be77d068999)
 
-### Create a project on SonarQube server
+### Create a project on the SonarQube server
 
 - Goto SonarQube dashboard -> click on `Manually`
 - Create a project
@@ -349,7 +349,7 @@ pipeline{
 - Click Apply and Save
 - Click Build Now
 
- ## second pipeline outupt
+ ## second pipeline output
  
 ![jenkins 2 pipeline af docker push](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/df43132f-f73f-48bb-86f3-ee5f0c0c418c)
 
@@ -379,7 +379,7 @@ terraform apply
 
 ![monitoring server](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/0ddf4ae0-447e-4796-9cae-86d92d9ecc7f)
 
-- Now copy EC2 instance public ip and connect via putty.
+- Now copy the EC2 instance public IP and connect via putty.
 - After connection run `sudo apt update` command.
 
 ### Now check Prometheus status
@@ -396,7 +396,7 @@ sudo systemctl status prometheus
   
 ![prometuse 1](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/8e844446-1c97-4714-9f89-3ed75ba7be06)
 
-### Now check Grafana Server status
+### Now check the Grafana Server status
 
 ```bash
 sudo systemctl status grafana-server
@@ -500,7 +500,7 @@ Integrate Jenkins with Prometheus to monitor the CI/CD pipeline.
 - Goto Manage Jenkins -> Plugins -> Available Plugins -> `Prometheus metrics` -> Install
 - Restart Jenkins
 - After that, go to Manage Jenkins -> System -> Prometheus
-- Configuration `Path`: prometheus
+- Configuration `Path`: Prometheus
 - Default Namespace: `default`
 - Collecting metrics period in seconds `120`
 - Job attribute name: `jenkins_job`
@@ -601,7 +601,7 @@ post {
 
 # Create AWS EKS Cluster
 
-- Update packages in Ubuntu instance
+- Update packages in the Ubuntu instance
   
 ```bash
 sudo apt update
@@ -630,7 +630,7 @@ Now go to eksctl's installed EC2 -> `Actions` -> `Security` -> `Modify IAM role`
 ```bash
 cd ..
 ```
-### Create EKS cluster using eksctl command
+### Create an EKS cluster using eksctl command
 ```bash
 eksctl create cluster --name youtube-cluster \
 --region ap-south-1 \
@@ -643,7 +643,7 @@ eksctl create cluster --name youtube-cluster \
 ### Cluster created in AWS 
 ![Eks Cluster dashbord](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/17d90c8c-d7c1-46ab-95e8-0a7032bd768e)
 
-- Run this command for check running nodes
+- Run this command to check running nodes
 
 ```bash
 kubectl get nodes
@@ -687,7 +687,7 @@ kubectl create namespace prometheus
 
 ![helm namespace](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/67321f1b-a51f-496d-8793-d5a42d8de000)
 
-- Inatsll prometheus by using this command
+- Install Prometheus by using this command
   
 ```bash
 helm install stable prometheus-community/kube-prometheus-stack -n prometheus
@@ -695,7 +695,7 @@ helm install stable prometheus-community/kube-prometheus-stack -n prometheus
 
 ![helm pro stack](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/520487bc-2e2e-494b-bce0-e323c797bd08)
 
-- Check Peds for prometheus
+- Check Pods for Prometheus
   
 ```bash
 kubectl get pods -n prometheus
@@ -711,8 +711,8 @@ kubectl get svc -n prometheus
 
 ![helm service](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/2b80bade-90d6-4dc5-b546-2e783365f673)
 
-- This pods are not connected with the external world.
-- So that, edit prometheus service file.
+- These pods are not connected with the external world.
+- So that, edit Prometheus service file.
   
 ```bash
 kubectl edit svc stable-kube-prometheus-sta-prometheus -n prometheus 
@@ -728,7 +728,7 @@ kubectl get svc -n prometheus
 ```
 ![pro load added](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/b1546fba-14c1-462b-93a0-1144d4835c78)
 
-- Copy Load Balancer URL and type in Browser.
+- Copy the Load Balancer URL and type in Browser.
   
 ![eks prometh run](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/97d72702-1587-4997-9ea9-f5a0e4743db6)
 
@@ -768,7 +768,7 @@ kubectl get svc -n prometheus
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ## Configure the Jenkins Pipeline for Deploy Application on AWS EKS
 
-### Install Kubernetes plugin 
+### Install the Kubernetes plugin 
 
 - Go to Jenkins Dashboard -> Manage Jenkins -> Plugins
 - `Kubernetes`
@@ -906,7 +906,7 @@ pipeline{
 ```bash
 kubectl get svc
 ```
-- Now copy `LoadBalancer` URL and paste in Web browser
+- Now copy the `LoadBalancer` URL and paste in a Web browser
 
 ![get svc finel](https://github.com/darjidhruv26/YouTube-DevSecOps/assets/90086813/36d1d302-f314-4ebc-b3e2-8a0bf51a2eb9)
 
@@ -919,7 +919,7 @@ kubectl get svc
 
 # Clean-Up Environment
 
-- This command will delete all the pods in Prometheus namespace
+- This command will delete all the pods in the Prometheus namespace
 ```bash
 kubectl delete --all pods -n prometheus
 ```
@@ -927,7 +927,7 @@ kubectl delete --all pods -n prometheus
 ```bash
 kubectl delete namespace prometheus
 ````
-` This command will show the all the deployments, pods & services in default namespace 
+` This command will show all the deployments, pods & services in the default namespace 
 ```bash
 kubectl get all
 ```
@@ -954,9 +954,10 @@ Go to `AWS CloudFormation`
 
 ## Destroy terraform infrastructure as
 
-```bash
-terraform destroy  
-```
-```bash
-terraform destroy -auto-approve
-```
+- Goto `jenkins_terraform` directory and run this terraform destroy command.
+  
+`terraform destroy ` or `terraform destroy -auto-approve`
+
+- Goto `monitoring-server` directory and run this terraform destroy command.
+
+`terraform destroy ` or `terraform destroy -auto-approve`

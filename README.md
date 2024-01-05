@@ -12,7 +12,7 @@
  ### Step 2: Clone the GitHub Repository.
  - Clone this Git Repo on the locale machine.
 ```bash
-git clone https://github.com/darjidhruv26/YouTube-DevSecOps.git
+https://github.com/darjidhruv26/DevSecOps-Pipeline.git
 ```
 - Open this repository in the code editor.
 - Open the terminal and change the directory to `jenkins_terraform`.
